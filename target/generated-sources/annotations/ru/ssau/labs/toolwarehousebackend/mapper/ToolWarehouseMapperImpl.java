@@ -11,7 +11,7 @@ import ru.ssau.labs.toolwarehousebackend.dto.ToolWarehouseDto;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-12-18T13:55:20+0400",
+    date = "2022-02-15T14:59:16+0400",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11 (Oracle Corporation)"
 )
 @Component

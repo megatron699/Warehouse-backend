@@ -2,72 +2,49 @@ package ru.ssau.labs.toolwarehousebackend.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.ssau.labs.toolwarehousebackend.dao.UserDao;
-import ru.ssau.labs.toolwarehousebackend.domain.User;
 import ru.ssau.labs.toolwarehousebackend.dto.AuthenticatedUserDto;
 import ru.ssau.labs.toolwarehousebackend.dto.UserDto;
-import ru.ssau.labs.toolwarehousebackend.enums.RoleEnum;
 import ru.ssau.labs.toolwarehousebackend.mapper.UserMapper;
-import ru.ssau.labs.toolwarehousebackend.security.JwtUtils;
+import ru.ssau.labs.toolwarehousebackend.service.UserDetails;
+import ru.ssau.labs.toolwarehousebackend.service.UserDetailsService;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-@Slf4j
 //@CrossOrigin(origins = "*")
 @RestController
-//@RequestMapping("/auth")
+@RequestMapping("/signin")
 @RequiredArgsConstructor
 public class AuthController {
-
-    /*@PostMapping("/sighin")
-    public void loginUser(@RequestBody UserDto userDto) {
-        User user = new User();
-        user.setLogin();
-
-        if(user.getLogin() == userDto.getUsername() && user.getPassword() == userDto.getPassword()) {
-            return true;
-        }
-        return false;
-    }*/
-
     private final AuthenticationManager authenticationManager;
     private final UserDao userDao;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtils jwtUtils;
+//    private final JwtUtils jwtUtils;
     private final UserMapper userMapper;
 
-    @PostMapping("/signin")
+    @PostMapping
     public AuthenticatedUserDto authenticateUser(@RequestBody UserDto userDto) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        /*String generateJwt = jwtUtils.generateJwt(authentication);
-        log.info(generateJwt);*/
-        AuthenticatedUserDto authenticatedUserDto = getAuthenticatedUserDto(userDto, authentication);
-        return authenticatedUserDto;
+        return getAuthenticatedUserDto(userDto);
     }
 
-    private AuthenticatedUserDto getAuthenticatedUserDto(UserDto userDto, Authentication authentication) {
+    private AuthenticatedUserDto getAuthenticatedUserDto(UserDto userDto) {
         AuthenticatedUserDto authenticatedUserDto = new AuthenticatedUserDto();
-        authenticatedUserDto.setUsername(userDto.getUsername());
-//        authenticatedUserDto.setAccessToken(generateJwt);
-        authenticatedUserDto.setRoles(getRoles(authentication));
+        UserDetailsService userDetailsService = new UserDetailsService(userDao);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userDto.getUsername(), userDto.getPassword());
+        if(userDetails == null) {
+            return null;
+        }
+        authenticatedUserDto.setUsername(userDetails.getUsername());
+        authenticatedUserDto.setRole(userDetails.getRole());
         return authenticatedUserDto;
     }
 
-    private List<String> getRoles(Authentication authentication) {
+
+    /*private List<String> getRoles(Authentication authentication) {
         return authentication.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
@@ -81,5 +58,5 @@ public class AuthController {
         User user = userMapper.toEntity(userDto);
         user.setRole(RoleEnum.ROLE_USER);
         userDao.save(user);
-    }
+    }*/
 }

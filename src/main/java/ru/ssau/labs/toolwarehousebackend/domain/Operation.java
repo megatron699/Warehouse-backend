@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -25,7 +26,7 @@ public class Operation {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ)
     @SequenceGenerator(name = ID_SEQ, sequenceName = ID_SEQ, allocationSize = 1)
     private Long id;
-//    private LocalDateTime operation_date;
+    private Date operationDate;
     private int amount;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "operation_type_id")

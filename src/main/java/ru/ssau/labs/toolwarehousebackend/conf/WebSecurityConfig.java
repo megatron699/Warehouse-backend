@@ -5,28 +5,21 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ru.ssau.labs.toolwarehousebackend.security.RestAuthEntryPointJwt;
-import ru.ssau.labs.toolwarehousebackend.security.AuthTokenFilter;
 
 @Configuration
 //@EnableWebSecurity
 @RequiredArgsConstructor
 //@EnableGlobalMethodSecurity(prePostEnabled = true )
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final UserDetailsService userDetailsService;
+//    private final UserDetailsService userDetailsService;
 
-    private final AuthTokenFilter authTokenFilter;
-
-    private final RestAuthEntryPointJwt restAuthEntryPointJwt;
+//    private final AuthTokenFilter authTokenFilter;
+//
+//    private final RestAuthEntryPointJwt restAuthEntryPointJwt;
 
     @Bean
     @Override
@@ -46,9 +39,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        /*http.cors().and().csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(restAuthEntryPointJwt).and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+       /* http.cors().and().csrf().disable()
+               // .exceptionHandling()
+                //authenticationEntryPoint(restAuthEntryPointJwt).and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers(
                         "/auth/**",
                         "/swagger-resources/**",
@@ -58,9 +51,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-ui/**",
                         "favicon.ico"
                 ).permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated();*/
 
-        http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);*/
+        //http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
         http.cors().and().csrf().disable();
     }
 }

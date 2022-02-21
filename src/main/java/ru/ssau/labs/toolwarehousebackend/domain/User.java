@@ -27,9 +27,8 @@ public class User {
     @SequenceGenerator(name = ID_SEQ, sequenceName = ID_SEQ, allocationSize = 1)
     private Long id;
     @Column(unique = true)
-    private String login = "admin";
-    private String password = "admin";
+    private String login;
+    private String password;
     @Enumerated(value = EnumType.STRING)
-    private RoleEnum role = RoleEnum.ROLE_ADMIN;
-   // private boolean isSignIn;
+    private RoleEnum role;
 }
